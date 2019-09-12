@@ -36,6 +36,20 @@ MMKVLogLevel g_currentLogLevel = MMKVLogDebug;
 MMKVLogLevel g_currentLogLevel = MMKVLogInfo;
 #endif
 
+bool g_isContentChangeNotifying = false;
+
+const char *_getFileName(const char *path) {
+    const char *ptr = strrchr(path, '/');
+    if (!ptr) {
+        ptr = strrchr(path, '\\');
+    }
+    if (ptr) {
+        return ptr + 1;
+    } else {
+        return path;
+    }
+}
+
 static android_LogPriority MMKVLogLevelDesc(MMKVLogLevel level) {
     switch (level) {
         case MMKVLogDebug:
@@ -65,16 +79,17 @@ void _MMKVLogWithLevel(
         if (length < 0) { // something wrong
             message = {};
         } else if (length < sizeof(buffer)) {
-            message = string(buffer, length);
+            message = string(buffer, static_cast<unsigned long>(length));
         } else {
-            message.resize(length, '\0');
+            message.resize(static_cast<unsigned long>(length), '\0');
             va_start(args, format);
-            std::vsnprintf(message.data(), length + 1, format, args);
+            std::vsnprintf(const_cast<char *>(message.data()), static_cast<size_t>(length) + 1,
+                           format, args);
             va_end(args);
         }
 
         if (g_isLogRedirecting) {
-            mmkvLog((int) level, file, line, func, message);
+            mmkv::mmkvLog((int) level, file, line, func, message);
         } else {
             __android_log_print(MMKVLogLevelDesc(level), APPNAME, "<%s:%d::%s> %s", file, line,
                                 func, message.c_str());
