@@ -25,8 +25,11 @@ import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
 import java.io.IOException;
 
+/**
+ * A helper class for MMKV based on Anonymous Shared Memory. {@link MMKV#mmkvWithAshmemID}
+ */
 public final class ParcelableMMKV implements Parcelable {
-    private String mmapID;
+    private final String mmapID;
     private int ashmemFD = -1;
     private int ashmemMetaFD = -1;
     private String cryptKey = null;
@@ -74,23 +77,22 @@ public final class ParcelableMMKV implements Parcelable {
         }
     }
 
-    public static final Parcelable.Creator<ParcelableMMKV> CREATOR =
-        new Parcelable.Creator<ParcelableMMKV>() {
-            @Override
-            public ParcelableMMKV createFromParcel(Parcel source) {
-                String mmapID = source.readString();
-                ParcelFileDescriptor fd = ParcelFileDescriptor.CREATOR.createFromParcel(source);
-                ParcelFileDescriptor metaFD = ParcelFileDescriptor.CREATOR.createFromParcel(source);
-                String cryptKey = source.readString();
-                if (fd != null && metaFD != null) {
-                    return new ParcelableMMKV(mmapID, fd.detachFd(), metaFD.detachFd(), cryptKey);
-                }
-                return null;
+    public static final Parcelable.Creator<ParcelableMMKV> CREATOR = new Parcelable.Creator<ParcelableMMKV>() {
+        @Override
+        public ParcelableMMKV createFromParcel(Parcel source) {
+            String mmapID = source.readString();
+            ParcelFileDescriptor fd = ParcelFileDescriptor.CREATOR.createFromParcel(source);
+            ParcelFileDescriptor metaFD = ParcelFileDescriptor.CREATOR.createFromParcel(source);
+            String cryptKey = source.readString();
+            if (fd != null && metaFD != null) {
+                return new ParcelableMMKV(mmapID, fd.detachFd(), metaFD.detachFd(), cryptKey);
             }
+            return null;
+        }
 
-            @Override
-            public ParcelableMMKV[] newArray(int size) {
-                return new ParcelableMMKV[size];
-            }
-        };
+        @Override
+        public ParcelableMMKV[] newArray(int size) {
+            return new ParcelableMMKV[size];
+        }
+    };
 }

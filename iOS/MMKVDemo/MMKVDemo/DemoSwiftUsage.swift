@@ -24,7 +24,7 @@ import Foundation
 class DemoSwiftUsage : NSObject {
 	@objc func testSwiftFunctionality() {
 
-        guard let mmkv = MMKV(mmapID: "testSwift") else {
+        guard let mmkv = MMKV(mmapID: "testSwift", mode: MMKVMode.singleProcess) else {
             return
         }
 
@@ -60,6 +60,13 @@ class DemoSwiftUsage : NSObject {
         let data = mmkv.data(forKey: "data")
         let str = String(data: data ?? Data(), encoding: .utf8) ?? ""
         print("Swift: data = \(str)")
+
+        let arr = [1, 0, 2, 4]
+        if let objArr = arr as NSArray? {
+            mmkv.set(objArr, forKey:"array")
+            let result = mmkv.object(of: NSArray.self, forKey: "array");
+            print("Swift: array = \(result as! NSArray)")
+        }
 
         mmkv.removeValue(forKey: "bool")
         print("Swift: after delete bool = \(mmkv.bool(forKey: "bool"))")

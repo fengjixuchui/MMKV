@@ -3,7 +3,8 @@ BasedOnStyle: LLVM
 IndentWidth: 4
 TabWidth: 4
 AlwaysBreakTemplateDeclarations: true
-AllowShortFunctionsOnASingleLine: Inline
+AllowShortFunctionsOnASingleLine: InlineOnly
+AllowShortLambdasOnASingleLine: Inline
 BreakAfterJavaFieldAnnotations: true
 BreakBeforeBraces: Linux
 SpaceAfterCStyleCast: true
@@ -19,16 +20,17 @@ BreakConstructorInitializersBeforeComma: true
 ConstructorInitializerAllOnOneLineOrOnePerLine: true
 BinPackParameters: false
 ReflowComments: false
+ObjCBlockIndentWidth: 4
 ---
 Language: Cpp
-ColumnLimit: 100
+ColumnLimit: 120
+IndentPPDirectives: AfterHash
 ---
 Language: ObjC
 ColumnLimit: 0
-UseTab: ForIndentation
-ObjCBlockIndentWidth: 4
+#UseTab: ForIndentation
 ---
 Language: Java
-ColumnLimit: 100
+ColumnLimit: 120
 AllowShortFunctionsOnASingleLine: None
 BreakBeforeBinaryOperators: NonAssignment
